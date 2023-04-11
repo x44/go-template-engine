@@ -4,8 +4,6 @@ import (
 	"fmt"
 	"strings"
 	"testing"
-
-	"github.com/x44/go-template-engine/internal/eol"
 )
 
 func TestDry(t *testing.T) {
@@ -21,7 +19,7 @@ func TestDry(t *testing.T) {
 
 	out, err := New().
 		SetInputStrings(in).
-		SetOutputEndOfLine(eol.LF).
+		SetOutputEndOfLine(LF).
 		Process()
 
 	if err != nil {
@@ -66,7 +64,7 @@ func TestFull(t *testing.T) {
 
 	out, err := New().
 		SetInputStrings(in).
-		SetOutputEndOfLine(eol.LF).
+		SetOutputEndOfLine(LF).
 		Filter("var1", true).
 		Filter("var2", false).
 		Replace("rep1", "replacement1").
