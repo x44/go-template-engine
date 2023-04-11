@@ -37,6 +37,10 @@ func New() *Temple {
 	return &Temple{}
 }
 
+func JustAFunc() {
+
+}
+
 func (t *Temple) SetInputFile(fn string) *Temple {
 	t.file = fn
 	return t
