@@ -2,6 +2,7 @@ package temple
 
 import (
 	"os"
+	"strings"
 
 	"github.com/x44/go-template-engine/internal/eol"
 	"github.com/x44/go-template-engine/internal/filter"
@@ -15,7 +16,8 @@ const (
 )
 
 type Temple struct {
-	file         string
+	inFile       string
+	outFile      string
 	lines        []string
 	eol          string
 	filters      []*templeFilter
@@ -38,7 +40,7 @@ func New() *Temple {
 }
 
 func (t *Temple) SetInputFile(fn string) *Temple {
-	t.file = fn
+	t.inFile = fn
 	return t
 }
 
@@ -49,6 +51,11 @@ func (t *Temple) SetInputString(s string) *Temple {
 
 func (t *Temple) SetInputStrings(s []string) *Temple {
 	t.lines = lines.FromStrings(s)
+	return t
+}
+
+func (t *Temple) SetOutputFile(fn string) *Temple {
+	t.outFile = fn
 	return t
 }
 
@@ -89,8 +96,8 @@ func (t *Temple) ReplaceFirst(variable string, value string) *Temple {
 }
 
 func (t *Temple) Process() ([]string, error) {
-	if len(t.file) > 0 {
-		b, err := os.ReadFile(t.file)
+	if len(t.inFile) > 0 {
+		b, err := os.ReadFile(t.inFile)
 		if err != nil {
 			return nil, err
 		}
@@ -130,6 +137,13 @@ func (t *Temple) Process() ([]string, error) {
 		last := lines[len(lines)-1]
 		out = append(out, eol.SetAll(lines[:len(lines)-1], t.eol)...)
 		out = append(out, eol.Change(last, t.eol))
+	}
+
+	if t.outFile != "" {
+		err = os.WriteFile(t.outFile, []byte(strings.Join(out, "")), os.ModePerm)
+		if err != nil {
+			return nil, err
+		}
 	}
 
 	return out, nil

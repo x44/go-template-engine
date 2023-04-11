@@ -23,6 +23,8 @@ out, err := temple.New().
 		// SetInputString(...).
 		// SetInputFile("filename.txt").
 		SetOutputEndOfLine(temple.LF).
+		// to automatically write output to a file use
+		// SetOutputFile("filepath").
 		Filter("var1", true).
 		Filter("var2", false).
 		Replace("rep1", "replacement1").
