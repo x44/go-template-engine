@@ -37,10 +37,6 @@ func New() *Temple {
 	return &Temple{}
 }
 
-func Hola() {
-
-}
-
 func (t *Temple) SetInputFile(fn string) *Temple {
 	t.file = fn
 	return t
