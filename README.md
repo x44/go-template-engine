@@ -22,7 +22,7 @@ out, err := temple.New().
 		// SetInputBytes(...).
 		// SetInputString(...).
 		// SetInputFile("filename.txt").
-		SetOutputEndOfLine(eol.LF).
+		SetOutputEndOfLine(temple.LF).
 		Filter("var1", true).
 		Filter("var2", false).
 		Replace("rep1", "replacement1").

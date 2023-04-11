@@ -9,6 +9,11 @@ import (
 	"github.com/x44/go-template-engine/internal/replacer"
 )
 
+const (
+	LF   = "\n"
+	CRLF = "\r\n"
+)
+
 type Temple struct {
 	file         string
 	lines        []string
