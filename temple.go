@@ -39,7 +39,7 @@ func New() *Temple {
 }
 
 func JustAFunc() {
-	fmt.Printf("JustAFunc")
+	fmt.Printf("JustAFuncXY")
 }
 
 func (t *Temple) SetInputFile(fn string) *Temple {
