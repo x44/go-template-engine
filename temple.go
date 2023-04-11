@@ -1,6 +1,7 @@
 package temple
 
 import (
+	"fmt"
 	"os"
 
 	"github.com/x44/go-template-engine/internal/eol"
@@ -38,7 +39,7 @@ func New() *Temple {
 }
 
 func JustAFunc() {
-
+	fmt.Printf("JustAFunc")
 }
 
 func (t *Temple) SetInputFile(fn string) *Temple {
