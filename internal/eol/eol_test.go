@@ -11,6 +11,19 @@ func TestEolGet(t *testing.T) {
 	compare(t, CRLF, Get("abc\r\n"))
 }
 
+func TestEolSet(t *testing.T) {
+	compare(t, "", Set("", NONE))
+	compare(t, "", Set("\n", NONE))
+	compare(t, "", Set("\r\n", NONE))
+	compare(t, "\n", Set("", LF))
+	compare(t, "\n", Set("\n", LF))
+	compare(t, "\n", Set("\r\n", LF))
+	compare(t, "\r\n", Set("", CRLF))
+	compare(t, "\r\n", Set("\n", CRLF))
+	compare(t, "\r\n", Set("\r\n", CRLF))
+	compare(t, "", Set("", "xxx"))
+}
+
 func TestEolAdd(t *testing.T) {
 	compare(t, "", Add("", NONE))
 	compare(t, "\n", Add("", LF))
@@ -28,7 +41,7 @@ func TestEolAddAllNONE(t *testing.T) {
 	compare(t, "bbb", s[1])
 }
 
-func TestEolAddAllToLF(t *testing.T) {
+func TestEolAddAllLF(t *testing.T) {
 	s := []string{
 		"aaa",
 		"bbb",
@@ -38,7 +51,7 @@ func TestEolAddAllToLF(t *testing.T) {
 	compare(t, "bbb\n", s[1])
 }
 
-func TestEolAddAllToCRLF(t *testing.T) {
+func TestEolAddAllCRLF(t *testing.T) {
 	s := []string{
 		"aaa",
 		"bbb",

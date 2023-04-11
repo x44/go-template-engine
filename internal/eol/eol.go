@@ -21,6 +21,29 @@ func Get(s string) string {
 	return NONE
 }
 
+// Sets EOL of s by either replacing the current EOL of s or by appending EOL to s
+func Set(s string, eol string) string {
+	if !(eol == NONE || eol == LF || eol == CRLF) {
+		return s
+	}
+	cur := Get(s)
+	switch cur {
+	case NONE:
+		return s + eol
+	case LF:
+		if eol == cur {
+			return s
+		}
+		return s[:len(s)-1] + eol
+	case CRLF:
+		if eol == cur {
+			return s
+		}
+		return s[:len(s)-2] + eol
+	}
+	return s
+}
+
 // Appends EOL to s without checking if s already has an EOL
 func Add(s string, eol string) string {
 	if eol == NONE || !(eol == LF || eol == CRLF) {
@@ -29,8 +52,11 @@ func Add(s string, eol string) string {
 	return s + eol
 }
 
-// Changes the EOL of s but only if s has an EOL
+// Changes the EOL of s only if s has an EOL
 func Change(s string, eol string) string {
+	if !(eol == NONE || eol == LF || eol == CRLF) {
+		return s
+	}
 	cur := Get(s)
 	switch cur {
 	case NONE:
@@ -47,6 +73,15 @@ func Change(s string, eol string) string {
 		return s[:len(s)-2] + eol
 	}
 	return s
+}
+
+// Sets EOL of all elements in a by either replacing the current EOL or by appending EOL
+func SetAll(a []string, eol string) []string {
+	out := make([]string, len(a))
+	for i, s := range a {
+		out[i] = Set(s, eol)
+	}
+	return out
 }
 
 // Appends EOL to all elemnts in a without checking if elments already have an EOL
