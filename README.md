@@ -17,21 +17,48 @@ in := []string{
 	...
 }
 out, err := temple.New().
-		SetInputStrings(in).
-		// or
-		// SetInputBytes(...).
-		// SetInputString(...).
-		// SetInputFile("filename.txt").
-		SetOutputEndOfLine(temple.LF).
-		// to automatically write output to a file use
-		// SetOutputFile("filepath").
+		InputStrings(in).
+		// OR
+		// InputBytes(...).
+		// InputString(...).
+		// InputFile("filename.txt").
+		EndOfLine(temple.LF).
+		// To automatically write output to a file use
+		// OutputFile("filepath").
+		// To read and write the same file use
+		// File("filepath").
+		// To dry run use
+		// DryRun(true).
 		Filter("var1", true).
 		Filter("var2", false).
 		Replace("rep1", "replacement1").
 		Replace("rep2", "replacement2").
 		Replace("empty", "").
-		Replace("multi", "multi_line_1\nmulti_line_2\n").
+		Replace("multi", "multi_line_1\nmulti_line_2").
 		Process()
+```
+
+## Example - Process Multiple Files
+```go
+walker := NewWalker("dir")
+// OR
+walker := NewWalker("dir").
+	Filter(func(dir, name string, isFile bool) bool {
+		if !isFile {
+			return true
+		}
+		return name == "file1.txt"
+	})
+
+err := temple.New().
+	EndOfLine(temple.LF).
+	Filter("var1", true).
+	Filter("var2", false).
+	Replace("rep1", "replacement1").
+	Replace("rep2", "replacement2").
+	Replace("empty", "").
+	Replace("multi", "multi_line_1\nmulti_line_2").
+	ProcessWalker(walker)
 ```
 
 ## Filter Syntax

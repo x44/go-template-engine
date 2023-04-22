@@ -17,7 +17,7 @@ const (
 
 func New(lines []string) *Replacer {
 	return &Replacer{
-		lines: lines[:],
+		lines: append([]string{}, lines...),
 	}
 }
 
@@ -105,16 +105,14 @@ func (r *Replacer) processLine(line, variable string, with []string, all bool) (
 	after := line[pos+len(variable):]
 	out := []string{}
 	indent := getIndent(before)
-	if len(before) > 0 && before != indent {
-		out = append(out, before)
+	// append stuff before the replaced var + the first replacement line
+	out = append(out, before+with[0])
+	// append remaining replacement lines (except the last) with the same indent as the line of the replaced variable
+	for i := 1; i < len(with)-1; i++ {
+		out = append(out, indent+with[i])
 	}
-	// append with the same indent as the replaced variable
-	for _, w := range with {
-		out = append(out, indent+w)
-	}
-	if len(after) > 0 {
-		out = append(out, after)
-	}
+	// append last replacement line + stuff after the replaced var
+	out = append(out, indent+with[len(with)-1]+after)
 	// signal to caller if the last returned line needs further processing
 	return out, true, len(after) > 0
 }

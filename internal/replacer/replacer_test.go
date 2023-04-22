@@ -4,6 +4,7 @@ import (
 	"testing"
 
 	"github.com/x44/go-template-engine/internal/lines"
+	"github.com/x44/go-template-engine/internal/testutil"
 )
 
 func TestEmpty(t *testing.T) {
@@ -121,17 +122,22 @@ func TestMultiLineWithMultiLineVar(t *testing.T) {
 	replacer := New(in)
 	replacer.Replace("var", with)
 	out := replacer.GetOutput()
-	if len(out) != 3 {
-		t.Errorf("expected 3 got %d", len(out))
+	exp := []string{
+		"first\n",
+		"second\r\n",
+		"third",
 	}
-	if out[0] != "first" {
-		t.Errorf("expected first got %s", out[0])
+	if len(out) != len(exp) {
+		t.Errorf("expected %d got %d", len(exp), len(out))
 	}
-	if out[1] != "second" {
-		t.Errorf("expected second got %s", out[1])
+	n := len(exp)
+	if len(out) < n {
+		n = len(out)
 	}
-	if out[2] != "third" {
-		t.Errorf("expected third got %s", out[2])
+	for i := 0; i < n; i++ {
+		if out[i] != exp[i] {
+			t.Errorf("\nexpected %s\ngot      %s", testutil.ReplaceControlChars(exp[i]), testutil.ReplaceControlChars(out[i]))
+		}
 	}
 }
 
@@ -143,20 +149,22 @@ func TestMultiLineWithMultiLineIndentVar(t *testing.T) {
 	replacer := New(in)
 	replacer.Replace("var", with)
 	out := replacer.GetOutput()
-	if len(out) != 4 {
-		t.Errorf("expected 4 got %d", len(out))
+	exp := []string{
+		"\tfirst\n",
+		"\tsecond\r\n",
+		"\tthirdafter",
 	}
-	if out[0] != "\tfirst" {
-		t.Errorf("expected \\tfirst got %s", out[0])
+	if len(out) != len(exp) {
+		t.Errorf("expected %d got %d", len(exp), len(out))
 	}
-	if out[1] != "\tsecond" {
-		t.Errorf("expected \\tsecond got %s", out[1])
+	n := len(exp)
+	if len(out) < n {
+		n = len(out)
 	}
-	if out[2] != "\tthird" {
-		t.Errorf("expected \\tthird got %s", out[2])
-	}
-	if out[3] != "after" {
-		t.Errorf("expected after got %s", out[3])
+	for i := 0; i < n; i++ {
+		if out[i] != exp[i] {
+			t.Errorf("\nexpected %s\ngot      %s", testutil.ReplaceControlChars(exp[i]), testutil.ReplaceControlChars(out[i]))
+		}
 	}
 }
 
@@ -168,23 +176,22 @@ func TestMultiLineWithMultiLineIndentVar2(t *testing.T) {
 	replacer := New(in)
 	replacer.Replace("var", with)
 	out := replacer.GetOutput()
-	if len(out) != 5 {
-		t.Errorf("expected 5 got %d", len(out))
+	exp := []string{
+		"\tabcfirst\n",
+		"\tsecond\r\n",
+		"\tthirdafter",
 	}
-	if out[0] != "\tabc" {
-		t.Errorf("expected \\tabc got %s", out[1])
+	if len(out) != len(exp) {
+		t.Errorf("expected %d got %d", len(exp), len(out))
 	}
-	if out[1] != "\tfirst" {
-		t.Errorf("expected \\tfirst got %s", out[1])
+	n := len(exp)
+	if len(out) < n {
+		n = len(out)
 	}
-	if out[2] != "\tsecond" {
-		t.Errorf("expected \\tsecond got %s", out[2])
-	}
-	if out[3] != "\tthird" {
-		t.Errorf("expected \\tthird got %s", out[3])
-	}
-	if out[4] != "after" {
-		t.Errorf("expected after got %s", out[4])
+	for i := 0; i < n; i++ {
+		if out[i] != exp[i] {
+			t.Errorf("\nexpected %s\ngot      %s", testutil.ReplaceControlChars(exp[i]), testutil.ReplaceControlChars(out[i]))
+		}
 	}
 }
 
@@ -198,23 +205,22 @@ func TestMultiLineWithMultiLineIndentVarAndSingleLineVar(t *testing.T) {
 	replacer.Replace("var", with)
 	replacer.Replace("var2", with2)
 	out := replacer.GetOutput()
-	if len(out) != 5 {
-		t.Errorf("expected 5 got %d", len(out))
+	exp := []string{
+		"\tabcfirst\n",
+		"\tsecond\r\n",
+		"\tthirdone",
 	}
-	if out[0] != "\tabc" {
-		t.Errorf("expected \\tabc got %s", out[1])
+	if len(out) != len(exp) {
+		t.Errorf("expected %d got %d", len(exp), len(out))
 	}
-	if out[1] != "\tfirst" {
-		t.Errorf("expected \\tfirst got %s", out[1])
+	n := len(exp)
+	if len(out) < n {
+		n = len(out)
 	}
-	if out[2] != "\tsecond" {
-		t.Errorf("expected \\tsecond got %s", out[2])
-	}
-	if out[3] != "\tthird" {
-		t.Errorf("expected \\tthird got %s", out[3])
-	}
-	if out[4] != "one" {
-		t.Errorf("expected one got %s", out[4])
+	for i := 0; i < n; i++ {
+		if out[i] != exp[i] {
+			t.Errorf("\nexpected %s\ngot      %s", testutil.ReplaceControlChars(exp[i]), testutil.ReplaceControlChars(out[i]))
+		}
 	}
 }
 
@@ -228,25 +234,56 @@ func TestMultiLineWithManyMultiLineIndentVars(t *testing.T) {
 	replacer.Replace("var", with)
 	replacer.Replace("var2", with2)
 	out := replacer.GetOutput()
-	if len(out) != 6 {
-		t.Errorf("expected 6 got %d", len(out))
+	exp := []string{
+		"\tabcfirst\n",
+		"\tsecond\r\n",
+		"\tthirdone\n",
+		"\ttwo\r\n",
+		"\t",
 	}
-	if out[0] != "\tabc" {
-		t.Errorf("expected \\tabc got %s", out[1])
+	if len(out) != len(exp) {
+		t.Errorf("expected %d got %d", len(exp), len(out))
 	}
-	if out[1] != "\tfirst" {
-		t.Errorf("expected \\tfirst got %s", out[1])
+	n := len(exp)
+	if len(out) < n {
+		n = len(out)
 	}
-	if out[2] != "\tsecond" {
-		t.Errorf("expected \\tsecond got %s", out[2])
+	for i := 0; i < n; i++ {
+		if out[i] != exp[i] {
+			t.Errorf("\nexpected %s\ngot      %s", testutil.ReplaceControlChars(exp[i]), testutil.ReplaceControlChars(out[i]))
+		}
 	}
-	if out[3] != "\tthird" {
-		t.Errorf("expected \\tthird got %s", out[3])
+}
+
+func TestMultiLineWithManyMultiLineIndentVarsAndLeadingNewline(t *testing.T) {
+	in := []string{
+		"\tabc${var}${var2}",
 	}
-	if out[4] != "one" {
-		t.Errorf("expected one got %s", out[4])
+	with := "\nfirst\nsecond\r\nthird"
+	with2 := "\none\ntwo\r\n"
+	replacer := New(in)
+	replacer.Replace("var", with)
+	replacer.Replace("var2", with2)
+	out := replacer.GetOutput()
+	exp := []string{
+		"\tabc\n",
+		"\tfirst\n",
+		"\tsecond\r\n",
+		"\tthird\n",
+		"\tone\n",
+		"\ttwo\r\n",
+		"\t",
 	}
-	if out[5] != "two" {
-		t.Errorf("expected two got %s", out[5])
+	if len(out) != len(exp) {
+		t.Errorf("expected %d got %d", len(exp), len(out))
+	}
+	n := len(exp)
+	if len(out) < n {
+		n = len(out)
+	}
+	for i := 0; i < n; i++ {
+		if out[i] != exp[i] {
+			t.Errorf("\nexpected %s\ngot      %s", testutil.ReplaceControlChars(exp[i]), testutil.ReplaceControlChars(out[i]))
+		}
 	}
 }
