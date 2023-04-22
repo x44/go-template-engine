@@ -121,7 +121,7 @@ func (t *Temple) Process() ([]string, error) {
 			src = "file " + t.inFile
 		}
 		if len(t.outFile) > 0 {
-			src = "file " + t.outFile
+			dst = "file " + t.outFile
 		}
 		fmt.Printf("Temple dry run: %s -> %s\n", src, dst)
 		return nil, nil
